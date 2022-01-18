@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}
+GPS history
+{% endblock %}
+
+{% block header %}
+{# Bootstrap CSS #}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+      integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <div class="row  justify-content-center">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-8">
+                    <h3>history</h3>
+                </div>
+                <div class="col-4">
+                    <a href="{% url 'gps:top_page' %}" class="btn btn-outline-primary btn-md btn-block">トップページへ戻る</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th>緯度</th>
+                                <th>経度</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for gps in gps_histories %}
+                            <tr>
+                                <td scope="row">{{ gps.id }}</td>
+                                <td scope="row">{{ gps.latitude }}</td>
+                                <td scope="row">{{ gps.longitude }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    {% include 'pagination.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{# jQuery first, then Popper.js, then Bootstrap JS #}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+        integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+        integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
+{% endblock %}

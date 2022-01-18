@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block header %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin=""/>
+    {# Make sure you put this AFTER Leaflet's CSS #}
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+    {# jQuery #}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <style>
+        #mapid {
+            width: 40%;
+            height: 512px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<h3>Leaflet + OpenStreetMap</h3>
+
+<div>
+    <div>
+        <a href="/update">位置情報の取得（ページの再読み込み）</a>
+    </div>
+    <div>
+        <a href="/">top pageへ戻る</a>
+    </div>
+    <div>
+        <button id="execute_ajax">位置情報の取得（ajax）</button>
+        <p id="result_ajax">{{ position }}</p>
+    </div>
+
+    <div id="mapid"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(function () {
+        let map;
+        let tile_layer;
+
+        // ボタン押下時の処理
+        $('#execute_ajax').on('click', () => {
+            // サーバ側にGPS情報を取得するように依頼
+            $.ajax({
+                url: '/get_geography',  // アクセスするURL
+                type: 'post',           // post or get
+                cache: false,           // cacheの利用有無
+                dataType: 'json',       // data type (script, json, htmlなど)
+                data: {},               // 送るデータ
+            })
+            .done(function (response) {
+                // 位置情報の取得
+                const geography = response.geography;
+                // 緯度・経度の取得
+                const name = geography.name;
+                const latitude = geography.latitude;
+                const longitude = geography.longitude;
+                // 表示位置を変更
+                map.panTo([latitude, longitude]);
+                // マーカーの移動
+                L.marker([latitude, longitude]).addTo(map);
+                $('#result_ajax').text(`[Success] ${name} (${latitude}, ${longitude})`);
+            })
+            .fail(function (response) {
+                $('#result_ajax').text('Failed');
+            });
+        });
+
+        // 初期化関数
+        const init = () => {
+            // mapの生成
+            const latitude = {{ geo.latitude }};
+            const longitude = {{ geo.longitude }};
+            map = L.map('mapid', {
+                center: [latitude, longitude],
+                zoom: 17,
+            });
+            // tileの取得
+            tile_layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: 'c <a href="http://osm.org/copyright">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            });
+            tile_layer.addTo(map);
+            // マーカー画像の場所を指定
+            L.marker([latitude, longitude]).addTo(map);
+        };
+        $(init);
+    });
+</script>
+{% endblock %}
