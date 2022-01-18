@@ -1,17 +1,21 @@
 # How to use
 
 1.以下のサイトへアクセスし, Docker Desktopをダウンロードしインストールする.
+
 [Docker公式webサイト](https://www.docker.com/get-started)
 
 2.Docker.appを実行する.
+
 ※ツールバーのDockerアイコン（クジラのマーク）をクリックし「Docker Desktop is running」と表示されていればOKです.
 
 3.Docker Hubにsign upする.（アカウントを作成してください）
+
 ※手順1の公式サイトよりアクセスできます.
 
 ※Docker DesktopをインストールすればDocker-composeも付属しています.
 
 4.正常にインストールできたか, 確認してみましょう.
+
 以下のコマンドを入力してください.
 
 ```
@@ -62,6 +66,12 @@ For more examples and ideas, visit:
 
 を一度にやってくれます.
 
+
+## Sampleを実行してみる
+
+- 各フォルダにREADME.mdがあるので参照ください.
+
+※コマンドは必ず「docker-compose.yml」がある階層で実行してください.
 
 
 ## 参考サイト
